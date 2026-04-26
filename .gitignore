@@ -1,0 +1,5 @@
+node_modules/
+.env
+storm_actions.json
+*.log
+.DS_Store
