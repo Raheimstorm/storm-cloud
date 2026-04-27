@@ -1,5 +1,5 @@
 // src/brain.js — Storm's reasoning core (session-aware for cloud)
-const Anthropic = require('@anthropic-ai/sdk');
+const AnthropicLib = require('@anthropic-ai/sdk');
 const TOOLS = require('./tools');
 const { executeTool, executeConfirmed } = require('./executor');
 
@@ -10,7 +10,7 @@ function getClient() {
     if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.includes('YOUR_CLAUDE')) {
       throw new Error('Claude API key not set in environment variables.');
     }
-    client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    client = new AnthropicLib({ apiKey: process.env.ANTHROPIC_API_KEY });
   }
   return client;
 }
