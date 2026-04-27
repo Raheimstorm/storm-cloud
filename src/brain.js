@@ -10,7 +10,7 @@ function getClient() {
     if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.includes('YOUR_CLAUDE')) {
       throw new Error('Claude API key not set in environment variables.');
     }
-    client = new AnthropicLib({ apiKey: process.env.ANTHROPIC_API_KEY });
+    client = new AnthropicLib.default ? new AnthropicLib.default({ apiKey: process.env.ANTHROPIC_API_KEY });
   }
   return client;
 }
