@@ -47,7 +47,7 @@ RESPONSE STYLE:
 - For errors: state the problem simply and suggest a fix`;
 }
 
-async function process(userMessage, history = [], tokens = null, userEmail = '') {
+async function handleMessage(userMessage, history = [], tokens = null, userEmail = '') {
   const claudeClient = getClient();
 
   if (!tokens) {
@@ -179,4 +179,4 @@ async function confirm(pendingAction, history = [], tokens = null, userEmail = '
   };
 }
 
-module.exports = { process, confirm };
+module.exports = { handleMessage, confirm };
