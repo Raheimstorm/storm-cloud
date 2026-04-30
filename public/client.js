@@ -61,35 +61,28 @@ function addMsg(text, type = 'storm') {
 // ── TTS ───────────────────────────────────────────────────────────────────────
 async function speak(text) {
   if (isMuted || !text) return;
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-
+  window.speechSynthesis.cancel();
+  const cleaned = text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/#{1,6}\s/g, '')
+    .replace(/\n{2,}/g, '. ')
+    .replace(/\n/g, ' ')
+    .trim();
   setState(S.SPEAKING);
-  try {
-    const res = await fetch('/api/tts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text })
-    });
-    if (!res.ok) throw new Error(`TTS ${res.status}`);
-
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    currentAudio = audio;
-
-    await new Promise((resolve, reject) => {
-      audio.onended = resolve;
-      audio.onerror = reject;
-      audio.play().catch(reject);
-    });
-  } catch (err) {
-    console.error('[TTS]', err.message);
-    toast('Voice playback error');
-  } finally {
-    currentAudio = null;
-    if (state === S.SPEAKING) setState(S.IDLE);
-  }
+  await new Promise((resolve) => {
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    utterance.onend = resolve;
+    utterance.onerror = resolve;
+    window.speechSynthesis.speak(utterance);
+  });
+  if (state === S.SPEAKING) setState(S.IDLE);
 }
+
 
 // ── COMMAND PROCESSOR ─────────────────────────────────────────────────────────
 async function processCommand(text) {
