@@ -28,8 +28,7 @@ router.post('/chat', async (req, res) => {
   try {
     const result = await brain.handleMessage( req.session.history, tokens, userEmail);
 
-    req.session.history = result.updatedHistory.slice(-20);
-
+    req.session.history = (result.updatedHistory || []).slice(-20);
     if (result.pendingAction) {
       req.session.pendingAction = result.pendingAction;
     }
